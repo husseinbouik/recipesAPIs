@@ -69,5 +69,4 @@ function modaldata(data) {
   </div>`;
   modal.innerHTML = details;
 }
-
 console.log(details);
