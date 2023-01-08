@@ -1,6 +1,7 @@
 // get element by id
 const cards = document.getElementById("allcards");
 // declare avaribal to apend our html
+let details = "";
 let output = "";
 // after the load of content show us  6 random cards from the API(url)puis get the as a parametre response and returne it type json ,from the json data creats the cards
 window.addEventListener("DOMContentLoaded", function () {
@@ -10,7 +11,13 @@ window.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then((json) => creatcards(json.meals[0]));
+      
   }
+  fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772")
+  .then((response) => {
+      return response.json();
+    })
+    .then((json) => modaldata(json.meals[0]));
 });
 
 function creatcards(data) {
@@ -33,23 +40,13 @@ function creatcards(data) {
 </div>
 </div>`;
 
-  console.log(output);
+  // console.log(output);
   cards.innerHTML = output;
 }
 
 
 
- function br() {
-    fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772");
-    then((response) => {
-        return response.json();
-      })
-      .then((json) => modaldata(json.meals[0]));
-};
-
 const modal = document.getElementById("modals");
-let details = "";
-// fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772");
 function modaldata(data) {
   details += `
 <div class="modal-dialog">
@@ -70,5 +67,7 @@ function modaldata(data) {
   </div>
     </div>
   </div>`;
+  modal.innerHTML = details;
 }
-modal.innerHTML = details;
+
+console.log(details);
