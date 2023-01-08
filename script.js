@@ -27,7 +27,9 @@ let output=""
       <h5 class="card-title">${data.strMeal}</h5>
       <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-      <a href="#" class="btn btn-primary" onclick="modaldata(${data.idMeal})"    data-bs-toggle="modal"  data-bs-target="#exampleModal">now MORE DETAILS</a>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      More details
+    </button>
     </div>
   </div>
 </div>
