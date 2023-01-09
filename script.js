@@ -67,5 +67,6 @@ function fillmodel(data) {
 <a id="video"  href="${data.strYoutube}" target="_blank">video</a>
 </div>
   `
+  
   document.getElementById('modal').innerHTML = output;
 }
