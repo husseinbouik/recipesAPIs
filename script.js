@@ -13,15 +13,11 @@ window.addEventListener("DOMContentLoaded", function () {
       .then((json) => creatcards(json.meals[0]));
       
   }
-  fetch("https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772")
-  .then((response) => {
-      return response.json();
-    })
-    .then((json) => modaldata(json.meals[0]));
 });
 
 function creatcards(data) {
-  output += `<div class="card mb-3" style="max-width: 540px;">
+  output += 
+  `<div class="card mb-3 item" style="max-width: 540px;">
 <div class="row g-0">
   <div class="col-md-4">
     <img src="${data.strMealThumb}" class="img-fluid rounded-start "  alt="...">
@@ -31,9 +27,8 @@ function creatcards(data) {
       <h5 class="card-title">${data.strMeal}</h5>
       <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-      <button type="button" class="btn btn-primary"  onclick=${
-        data.idMeal} data-bs-toggle="modal" data-bs-target="#exampleModal">
-      More details
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick = "modaldata(${data.idMeal})">
+      Launch demo modal
     </button>
     </div>
   </div>
@@ -46,27 +41,91 @@ function creatcards(data) {
 
 
 
-const modal = document.getElementById("modals");
-function modaldata(data) {
-  details += `
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-    <img src="${data.strMealThumb}" class="card-img-top" alt="...">
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-    <h5 class="card-title">${data.strMeal}</h5>
-    <ol>
-    <li>category : ${data.strCategory}</li>
-    <li>country : ${data.strArea}</li>
-    <li>instructions :</li>
-    </ol>
-    <p class="card-text"> ${data.strInstructions}</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-    </div>
-  </div>`;
-  modal.innerHTML = details;
+cards.addEventListener("click", modaldata)
+
+function modaldata(e) {
+  fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${e} `)
+    .then(response => response.json())
+    .then((data) => fillmodel(data.meals[0]))
 }
-console.log(details);
+
+
+function fillmodel(data) {
+  output = "";
+  output +=
+    `
+  <div class="modal-body">
+<img src="${data.strMealThumb}" class="modal-img   img-fluid"  >
+<h5 class="modal-title" id="exampleModalLabel">${data.strMeal}</h5>
+<ul>
+<li> Category : ${data.strCategory}</li>
+<li>Area : ${data.strArea}</li>
+<li>instruction:</li>
+</ul>
+<pre class="ingrédient"></pre>
+<p  class="preparation">${data.strInstructions}</p>
+<a id="video"  href="${data.strYoutube}" target="_blank">video</a>
+</div>
+  `
+  document.getElementById('modal').innerHTML = output;
+}
+
+
+const list_element = document.getElementById('list');
+const pagination_element = document.getElementById('pagination');
+
+let current_page = 1;
+let rows = 5;
+
+function DisplayList (items, wrapper, rows_per_page, page) {
+	wrapper.innerHTML = "";
+	page--;
+
+	let start = rows_per_page * page;
+	let end = start + rows_per_page;
+	let paginatedItems = items.slice(start, end);
+
+	for (let i = 0; i < paginatedItems.length; i++) {
+		let item = paginatedItems[i];
+
+		let item_element = document.createElement('div');
+		item_element.classList.add('item');
+		item_element.innerText = item;
+		
+		wrapper.appendChild(item_element);
+	}
+}
+
+function SetupPagination (items, wrapper, rows_per_page) {
+	wrapper.innerHTML = "";
+
+	let page_count = Math.ceil(items.length / rows_per_page);
+	for (let i = 1; i < page_count + 1; i++) {
+		let btn = PaginationButton(i, items);
+		wrapper.appendChild(btn);
+	}
+}
+
+function PaginationButton (page, items) {
+	let button = document.createElement('button');
+	button.innerText = page;
+
+	if (current_page == page) button.classList.add('active');
+
+	button.addEventListener('click', function () {
+		current_page = page;
+		DisplayList(items, list_element, rows, current_page);
+
+		let current_btn = document.querySelector('.pagenumbers button.active');
+		current_btn.classList.remove('active');
+
+		button.classList.add('active');
+	});
+
+	return button;
+}
+
+DisplayList(list_items, list_element, rows, current_page);
+SetupPagination(list_items, pagination_element, rows);
+
+
