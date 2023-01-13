@@ -74,8 +74,6 @@ function fillmodel(data) {
   output +=`<h5>instruction:</h5>
   <p  class="preparation">${data.strInstructions}</p>
   <a href="${data.strYoutube}"  type="button" class="btn btn-outline-danger" target="_blank">video</a>
-
-  
   `;
   document.getElementById('modal').innerHTML = output;
 }
