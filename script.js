@@ -28,7 +28,7 @@ function creatcards(data) {
       <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick = "modaldata(${data.idMeal})">
-      Launch demo modal
+      For More
     </button>
     </div>
   </div>
@@ -51,22 +51,34 @@ function modaldata(e) {
 
 
 function fillmodel(data) {
-  output = "";
-  output +=
-    `
+  output = `
   <div class="modal-body">
 <img src="${data.strMealThumb}" class="modal-img   img-fluid"  >
 <h5 class="modal-title" id="exampleModalLabel">${data.strMeal}</h5>
 <ul>
-<li> Category : ${data.strCategory}</li>
-<li>Area : ${data.strArea}</li>
-<li>instruction:</li>
+<h6> Category : ${data.strCategory}</h6>
+<h6>Area : ${data.strArea}</h6>
+
 </ul>
-<pre class="ingrédient"></pre>
-<p  class="preparation">${data.strInstructions}</p>
-<a id="video"  href="${data.strYoutube}" target="_blank">video</a>
+<h5 class="ingrédient"> ingrédient:</h5>
 </div>
   `
+  let i=1;
+  do {
+    output +=`<li>${data["strIngredient" + i]}  : ${data["strMeasure" + i]} </li>`;
+    i++
+
+  } while ( data["strIngredient" + i] !== null &&
+      data["strIngredient" + i] !== "" &&
+      data["strIngredient" + i] !== " ");
+
+  output +=`<h5>instruction:</h5>
+  <p  class="preparation">${data.strInstructions}</p>
+  <a href="${data.strYoutube}"  type="button" class="btn btn-outline-danger" target="_blank">video</a>
+
   
+  `;
   document.getElementById('modal').innerHTML = output;
 }
+
+ 
