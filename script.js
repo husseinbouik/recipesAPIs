@@ -69,8 +69,7 @@ function fillmodel(data) {
     i++
 
   } while ( data["strIngredient" + i] !== null &&
-      data["strIngredient" + i] !== "" &&
-      data["strIngredient" + i] !== " ");
+      data["strIngredient" + i] !== "");
 
   output +=`<h5>instruction:</h5>
   <p  class="preparation">${data.strInstructions}</p>
