@@ -76,6 +76,79 @@ function fillmodel(data) {
   <a href="${data.strYoutube}"  type="button" class="btn btn-outline-danger" target="_blank">video</a>
   `;
   document.getElementById('modal').innerHTML = output;
+} 
+// pagination 
+const maxecards = 6;
+
+function pagenumber(arayvalues) {
+  const pagenumber = Math.ceil(arayvalues.length / maxecards);
+  return pagenumber;
 }
 
+function allpages(arayvalues){
+  const allpages = [];
+  for (let i = 0; i < pagenumber(arayvalues); i++) {
+    allpages.push(arayvalues.slice(i * maxecards, (i + 1) * maxecards));
+  }
+  return allpages;
+}
+/////////  search //////
+const search = document.getElementById("searchbtn");
+search.addEventListener("click", function (e) {
+  e.preventDefault();
+  const input = document.getElementById("serchinput").value;
+  const searchURL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${input}`;
+
+  fetch(searchURL)
+    .then((response) => response.json())
+    .then((data) => pagesersh(data.meals));
+});
+
+function btnpagination(arayvalues) {
+  let footer = document.getElementById("pagin-num");
+  footer.innerHTML = "";
+  for (let i = 0; i < pagenumber(arayvalues); i++) {
+    const li = document.createElement("li");
+    li.setAttribute("class", "page-item");
+    const a = document.createElement("a");
+    a.setAttribute("class", "page-link");
+    a.innerHTML = i + 1;
+    li.appendChild(a);
+    a.addEventListener("click", () => {
+      let activremov = document.querySelectorAll("li");
+      activremov.forEach((e) => {
+        e.classList.remove("active");
+      });
+      li.setAttribute("class", "active");
+      // Display the appropriate page when the button is clicked
+      displayPage(i, arayvalues);
+    });
+    footer.appendChild(li);
+  }
+}
+function displayPage(pagenumber, arayvalues) {
+  // Clear the current page
+
+  cards.innerHTML = "";
+
+  const page = allpages(arayvalues)[pagenumber];
+  for (const data of page) {
+    creatcards(data);
+  }
+}
+
+function pagesersh(data) {
+  cards.innerHTML = "";
+
+  if (data == null) {
+    cards.innerHTML = "";
+    cards.innerHTML = `<p class="text-danger display-5 text-center" >
+	   SORRY ,THIS RECIPE IS NOT FOUND CAN YOU SEARSH FOR SOMETHINGS ELSE 
+	 </p>`;
+  } else {
+    allpages(data);
+    btnpagination(data);
+    displayPage(0, data);
+  }
+}
  
