@@ -77,37 +77,39 @@ function fillmodel(data) {
   `;
   document.getElementById('modal').innerHTML = output;
 } 
-// pagination 
-const maxecards = 6;
-
-function pagenumber(arayvalues) {
-  const pagenumber = Math.ceil(arayvalues.length / maxecards);
-  return pagenumber;
+// pagination
+// get max number recette 
+const maxrecette = 6;
+function getnumber(arayvalues) {
+  const getnumber = Math.ceil(arayvalues.length / maxrecette);
+  return getnumber;
 }
 
-function allpages(arayvalues){
-  const allpages = [];
-  for (let i = 0; i < pagenumber(arayvalues); i++) {
-    allpages.push(arayvalues.slice(i * maxecards, (i + 1) * maxecards));
+function sliceelement(arayvalues) {
+  const sliceelement = [];
+  for (let i = 0; i < getnumber(arayvalues); i++) {
+    sliceelement.push(arayvalues.slice(i * maxrecette, (i + 1) * maxrecette));
   }
-  return allpages;
+  return sliceelement;
 }
-/////////  search //////
-const search = document.getElementById("searchbtn");
+// button search
+const search = document.getElementById("search-btn");
 search.addEventListener("click", function (e) {
   e.preventDefault();
-  const input = document.getElementById("serchinput").value;
+  cards.innerHTML="";
+  output="";
+  const input = document.getElementById("search-input").value;
   const searchURL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${input}`;
 
   fetch(searchURL)
     .then((response) => response.json())
-    .then((data) => pagesersh(data.meals));
+    .then((data) => searchbutton(data.meals));
 });
-
+// button pagination
 function btnpagination(arayvalues) {
-  let footer = document.getElementById("pagin-num");
-  footer.innerHTML = "";
-  for (let i = 0; i < pagenumber(arayvalues); i++) {
+  let pagenumb = document.getElementById("pagi-num");
+  pagenumb.innerHTML = "";
+  for (let i = 0; i < getnumber(arayvalues); i++) {
     const li = document.createElement("li");
     li.setAttribute("class", "page-item");
     const a = document.createElement("a");
@@ -115,40 +117,36 @@ function btnpagination(arayvalues) {
     a.innerHTML = i + 1;
     li.appendChild(a);
     a.addEventListener("click", () => {
+      output="";
       let activremov = document.querySelectorAll("li");
       activremov.forEach((e) => {
         e.classList.remove("active");
       });
       li.setAttribute("class", "active");
       // Display the appropriate page when the button is clicked
-      displayPage(i, arayvalues);
+      disppage(i, arayvalues);
     });
-    footer.appendChild(li);
+    pagenumb.appendChild(li);
   }
 }
-function displayPage(pagenumber, arayvalues) {
-  // Clear the current page
-
+function disppage(getnumber, arayvalues) {
   cards.innerHTML = "";
-
-  const page = allpages(arayvalues)[pagenumber];
+  const page = sliceelement(arayvalues)[getnumber];
   for (const data of page) {
     creatcards(data);
   }
 }
 
-function pagesersh(data) {
+function searchbutton(data) {
   cards.innerHTML = "";
-
   if (data == null) {
     cards.innerHTML = "";
     cards.innerHTML = `<p class="text-danger display-5 text-center" >
-	   SORRY ,THIS RECIPE IS NOT FOUND CAN YOU SEARSH FOR SOMETHINGS ELSE 
+	 try Again
 	 </p>`;
   } else {
-    allpages(data);
+    sliceelement(data);
     btnpagination(data);
-    displayPage(0, data);
+    disppage(0, data);
   }
 }
- 
